@@ -23,14 +23,14 @@
     <section id="aftermap">
       <div class="filter-options">
         <h2>Filter Results</h2>
-        <select id="neighborhoods-select" name="neighborhoods" role="menu" onchange="updateRestaurants()">
-          <option value="all" role="menuitem">All Neighborhoods</option>
+        <select id="neighborhoods-select" name="neighborhoods" role="menubar" aria-label="neighborhoods" aria-expanded="false" onchange="updateRestaurants()">
+          <option value="all" role="menuitem" tabindex="0">All Neighborhoods</option>
         </select>
-        <select id="cuisines-select" name="cuisines" role="menu" onchange="updateRestaurants()">
-          <option value="all" role="menuitem">All Cuisines</option>
+        <select id="cuisines-select" name="cuisines" role="menubar" aria-label="cuisines" aria-expanded="false" onchange="updateRestaurants()">
+          <option value="all" role="menuitem" tabindex="0">All Cuisines</option>
         </select>
       </div>
-      <ul id="restaurants-list"></ul>
+      <ul id="restaurants-list" ></ul>
     </section>
   </main>
 

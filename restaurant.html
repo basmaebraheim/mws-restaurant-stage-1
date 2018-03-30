@@ -12,13 +12,13 @@
 
 <body class="inside">
   <!-- Beginning header -->
-  <header role="banner">
+  <header>
     <!-- Beginning nav -->
-    <nav role="navigation">
+    <nav role="banner">
       <h1><a href="/">Restaurant Reviews</a></h1>
     </nav>
     <!-- Beginning breadcrumb -->
-    <ul id="breadcrumb" role="navigation">
+    <ul id="breadcrumb" aria-label="Breadcrumb"	>
       <li><a href="/">Home</a></li>
     </ul>
     <!-- End breadcrumb -->
@@ -40,7 +40,7 @@
       <img id="restaurant-img" alt="restaurant image">
       <p id="restaurant-cuisine"></p>
       <p id="restaurant-address"></p>
-      <table id="restaurant-hours"></table>
+      <table id="restaurant-hours" role="grid" aria-rowcount="7" aria-colcount="2"></table>
     </section>
     <!-- end restaurant -->
     <!-- Beginning reviews -->

@@ -13,17 +13,18 @@ document.addEventListener('DOMContentLoaded', (event) => {
   startServiceWorker();
 });
 /**
- * start sevice worker.
+ * start sevice worker Registration.
  */
 startServiceWorker =() =>{ 
-  if (!navigator.serviceWorker) return;
+    if (!navigator.serviceWorker) return;
   
-  var indexController = this;
-  
-  navigator.serviceWorker.register('sw.js').then(function(reg) { 
-    if (!navigator.serviceWorker.controller) { return; } 
-  }); 
-}
+    navigator.serviceWorker.register('/sw.js').then(function() {
+      console.log('Registration worked!');
+    }).catch(function() {
+      console.log('Registration failed!');
+    });
+
+};
 /**
  * Fetch all neighborhoods and set their HTML.
  */
@@ -47,7 +48,7 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
     const option = document.createElement('option');
     option.innerHTML = neighborhood;
     option.value = neighborhood;
-    option.role="menuitem";
+    option.setAttribute(role)="menuitem";
     select.append(option);
   });
 }
@@ -75,7 +76,7 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
   cuisines.forEach(cuisine => {
     const option = document.createElement('option');
     option.innerHTML = cuisine;
-    option.role="menuitem";
+    option.setAttribute(role)="menuitem";
     option.value = cuisine;
     select.append(option);
   });
@@ -172,6 +173,8 @@ createRestaurantHTML = (restaurant) => {
 
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
+  more.tabIndex="0";
+  mare.setAttribute("aria-label", "more information about"+restaurant.name);
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more)
 

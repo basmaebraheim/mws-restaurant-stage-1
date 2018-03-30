@@ -297,6 +297,10 @@ nav h1 a {
   padding: 30px 40px 80px;
   order:2;
 }
+#reviews-container table {
+  width: 100%;
+  display: block;
+}
 #reviews-container h2 {
   color: #f58500;
   font-size: 24pt;

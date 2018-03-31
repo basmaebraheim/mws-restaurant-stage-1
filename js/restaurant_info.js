@@ -125,23 +125,27 @@ createReviewHTML = (review) => {
   const name = document.createElement('h3');
   name.innerHTML = review.name;
   name.className = 'name';
+  name.setAttribute("tabindex","0");  
   reviewHead.appendChild(name);
 
   const date = document.createElement('p');
   date.innerHTML = review.date;
   date.className = 'date';
+  date.setAttribute("tabindex","0");
   reviewHead.appendChild(date);
-
+  
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;
   rating.className = 'rating';
+  rating.setAttribute("tabindex","0");
   li.appendChild(rating);
-
+  
   const comments = document.createElement('p');
   comments.innerHTML = review.comments;
   li.appendChild(comments);
+  comments.setAttribute("tabindex","0");
   li.setAttribute("role","article");
-
+  
   return li;
 }
 

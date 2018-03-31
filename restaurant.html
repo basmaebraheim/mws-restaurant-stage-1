@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <!-- Normalize.css for better cross-browser consistency -->
@@ -14,14 +14,16 @@
   <!-- Beginning header -->
   <header>
     <!-- Beginning nav -->
-    <nav role="banner">
-      <h1><a href="/">Restaurant Reviews</a></h1>
+    <nav>
+      <div role="banner">
+        <h1><a href="/">Restaurant Reviews</a></h1>
+      </div>
+      <!-- Beginning breadcrumb -->
+      <ul id="breadcrumb" aria-label="Breadcrumb"	>
+        <li><a href="/">Home</a></li>
+      </ul>
+      <!-- End breadcrumb -->
     </nav>
-    <!-- Beginning breadcrumb -->
-    <ul id="breadcrumb" aria-label="Breadcrumb"	>
-      <li><a href="/">Home</a></li>
-    </ul>
-    <!-- End breadcrumb -->
     <!-- End nav -->
   </header>
   <!-- End header -->
@@ -52,7 +54,7 @@
   <!-- End main -->
 
   <!-- Beginning footer -->
-  <footer id="footer" role="connectinfo">
+  <footer id="footer">
     Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
   </footer>
   <!-- End footer -->
@@ -62,6 +64,8 @@
   <script type="text/javascript" src="js/dbhelper.js"></script>
   <!-- Main javascript file -->
   <script type="text/javascript" src="js/restaurant_info.js"></script>
+  <!-- sw-registration javascript file -->
+  <script type="application/javascript" charset="utf-8" src="js/sw-registration.js"></script>
   <!-- Google Maps -->
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAfDsaEgjXnJzeRzlGoYdtI1ro7i-T83Jo&libraries=places&callback=initMap"></script>
   <!-- End scripts -->

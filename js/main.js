@@ -48,7 +48,8 @@ fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
     const option = document.createElement('option');
     option.innerHTML = neighborhood;
     option.value = neighborhood;
-    option.setAttribute(role)="menuitem";
+    option.setAttribute("role", "menuitem");
+    
     select.append(option);
   });
 }
@@ -76,7 +77,7 @@ fillCuisinesHTML = (cuisines = self.cuisines) => {
   cuisines.forEach(cuisine => {
     const option = document.createElement('option');
     option.innerHTML = cuisine;
-    option.setAttribute(role)="menuitem";
+    option.setAttribute("role","menuitem");
     option.value = cuisine;
     select.append(option);
   });
@@ -155,7 +156,7 @@ createRestaurantHTML = (restaurant) => {
 
   const image = document.createElement('img');
   image.className = 'restaurant-img';
-  image.alt = restaurant.name + "'s photo";
+  image.alt ="An image of"+ restaurant.name +" Restaurant in " + restaurant.neighborhood ;
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
   li.append(image);
 
@@ -173,9 +174,9 @@ createRestaurantHTML = (restaurant) => {
 
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
-  mare.setAttribute("tabIndex", "0");    
-  mare.setAttribute("role", "button");  
-  mare.setAttribute("aria-label", "more information about"+restaurant.name);
+  more.setAttribute("tabIndex", "0");    
+  more.setAttribute("role", "button");  
+  more.setAttribute("aria-label", "More Information About"+restaurant.name);
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more)
   li.setAttribute("role" , "article");

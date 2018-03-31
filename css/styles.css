@@ -127,10 +127,15 @@ nav h1 a {
     text-decoration: none;
 }
 /* ====================== Map ====================== */
-#map {
+#map-container {
   height: 300px;
   width: 100%;
   background-color: #ccc;
+}
+#map {
+  background-color: #ccc;
+  height: 100%;
+  width: 100%;
 }
 /* ====================== Restaurant Filtering ====================== */
 .filter-options {
@@ -369,9 +374,6 @@ nav h1 a {
   #restaurant-container, #reviews-container {
     padding: 10px 20px 30px;
     width: calc((100% - 80px)/2);
-  }
-  .inside #map-container {
-    height: 350px;
   }
   
 }

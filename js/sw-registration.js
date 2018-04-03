@@ -11,3 +11,4 @@ startServiceWorker =() =>{
     });
 
 };
+startServiceWorker();

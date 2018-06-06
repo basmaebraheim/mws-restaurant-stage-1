@@ -1,3 +1,4 @@
+var idb = require('idb');
 /**
  * Common database helper functions.
  */
@@ -188,6 +189,7 @@ class DBHelper {
    */
   static imageUrlForRestaurant(restaurant) {
     if(restaurant.photograph){
+      console.log("/img/${restaurant.photograph}.jpg");
       return (`/img/${restaurant.photograph}.jpg`);
     }else{
       console.log(restaurant.photograph);

@@ -18,13 +18,18 @@
     "gulp-uglify-es": "^1.0.4"
   },
   "dependencies": {
+    "babelify": "^8.0.0",
     "browser-sync": "^2.24.4",
     "grunt-responsive-images": "^1.10.1",
     "gulp": "^4.0.0",
     "gulp-concat": "^2.6.1",
+    "gulp-livereload": "^3.8.1",
     "gulp-minify-css": "^1.2.4",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.0",
-    "idb": "^2.1.2"
+    "idb": "^2.1.2",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0",
+    "watchify": "^3.11.0"
   }
 }

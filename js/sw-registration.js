@@ -1,7 +1,7 @@
 /**
  * start sevice worker Registration.
  */
-startServiceWorker =() =>{ 
+const startServiceWorker = () =>{ 
     if (!navigator.serviceWorker) return;
   
     navigator.serviceWorker.register('/sw.js').then(function() {

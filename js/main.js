@@ -2,7 +2,7 @@ let restaurants,
   neighborhoods,
   cuisines
 var map
-var markers = []
+window.markers = []
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
@@ -142,7 +142,7 @@ const fillRestaurantsHTML = (restaurants = self.restaurants) => {
  */
 const createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
-
+  li.className = 'grid-item';
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.alt ="An image of"+ restaurant.name +" Restaurant in " + restaurant.neighborhood ;

@@ -29,15 +29,7 @@ gulp.task('copy-restaurant', function(done){
     done();
 });
 
-/*gulp.task('copy-images', function(done) {
-    var imgSrc = 'images/*',
-    imgDst = 'dist/images';
-    
-    gulp.src(imgSrc)
-    .pipe(imagemin())
-    .pipe(gulp.dest(imgDst));
-    done();
- });*/
+
  gulp.task('copy-images', function(done) {
     var imgSrc = 'img/*',
     imgDst = 'dist/img';
@@ -48,19 +40,38 @@ gulp.task('copy-restaurant', function(done){
     done();
  });
 
-gulp.task('js-concat', function(done){
-    gulp.src('js/*.js')
-    .pipe(concat('all.js'))
+gulp.task('main-js-concat', function(done){
+    gulp.src(['js/dbhelper.js' , 'js/main.js' , 'js/sw-registration.js'])
+    .pipe(concat('concat-main.js'))
+    .pipe(gulp.dest('dist/js/'));
+    done();
+ });
+ gulp.task('info-js-concat', function(done){
+    gulp.src(['js/dbhelper.js' , 'js/restaurant_info.js' , 'js/sw-registration.js'])
+    .pipe(concat('concat-info.js'))
     .pipe(gulp.dest('dist/js/'));
     done();
  });
  
- gulp.task('script-dist', gulp.series('js-concat' , function () {
+ gulp.task('main-script-dist', gulp.series('main-js-concat' , function () {
     // app.js is your main JS file with all your module inclusions
-    return browserify({entries: './dist/js/all.js', debug: true})
+    return browserify({entries: './dist/js/concat-main.js', debug: true})
         .transform("babelify", { presets: ['env'] })
         .bundle()
-        .pipe(source('script.js'))
+        .pipe(source('main.js'))
+        .pipe(buffer())
+        .pipe(sourcemaps.init())
+        .pipe(uglify())
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('./dist/js'))
+        .pipe(livereload());
+}));
+gulp.task('info-script-dist', gulp.series('info-js-concat' , function () {
+    // app.js is your main JS file with all your module inclusions
+    return browserify({entries: './dist/js/concat-info.js', debug: true})
+        .transform("babelify", { presets: ['env'] })
+        .bundle()
+        .pipe(source('info.js'))
         .pipe(buffer())
         .pipe(sourcemaps.init())
         .pipe(uglify())
@@ -78,11 +89,11 @@ gulp.task('js-concat', function(done){
     done();
  });
  
- gulp.task('default', gulp.series('copy-index','copy-restaurant','copy-images','style-dist', 'script-dist', function(done) {
+ gulp.task('default', gulp.series('copy-index','copy-restaurant','copy-images','style-dist', 'main-script-dist', 'info-script-dist', function(done) {
     gulp.watch('index.html', gulp.series('copy-index'));
     gulp.watch('restaurant.html', gulp.series('copy-restaurant'));
     gulp.watch('css/*.css', gulp.series('style-dist'));
-    gulp.watch('js/*.js', gulp.series('script-dist'));
+    gulp.watch('js/*.js', gulp.series('main-script-dist' , 'info-script-dist'));
     gulp.watch('./dist/index.html').on('change', browserSync.reload);
     gulp.watch('./dist/restaurant.html').on('change', browserSync.reload);
     done();

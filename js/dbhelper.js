@@ -61,7 +61,6 @@ class DBHelper {
       var index = db.transaction('restaurants')
         .objectStore('restaurants');
       return index.getAll().then((restaurants) => {
-        console.log(restaurants);
         callback(null, restaurants);
         
       });
@@ -187,15 +186,35 @@ class DBHelper {
   /**
    * Restaurant image URL.
    */
-  static imageUrlForRestaurant(restaurant) {
+  static imageUrlForRestaurant(restaurant , size) {
     if(restaurant.photograph){
-      console.log("/img/${restaurant.photograph}.jpg");
-      return (`/img/${restaurant.photograph}.jpg`);
-    }else{
-      console.log(restaurant.photograph);
-      return (`#`);
-    }
+      switch(size) {
+        case "xs":
+              return (`/images/${restaurant.photograph}-200_xs.jpg`);
+            break;
+        case "sm":
+              return (`/images/${restaurant.photograph}-400_sm.jpg`);
+            break;
+        case "md":
+              return (`/images/${restaurant.photograph}-600_md.jpg`);
+            break;
+        case "lg":
+              return (`/images/${restaurant.photograph}-800_lg.jpg`);
+            break;
+        default:
+              return (`/images/${restaurant.photograph}-800_lg.jpg`);
+      }
+    } else{
+        return (`#`);
+      }
   }
+    /*if(restaurant.photograph){
+      console.log("/images/${restaurant.photograph}-400_sm.jpg");
+      return (`/images/${restaurant.photograph}-400_sm.jpg`);
+    }else{
+      return (`#`);
+    }*/
+  
 
   /**
    * Restaurant name.

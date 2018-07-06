@@ -122,8 +122,6 @@ const resetRestaurants = (restaurants) => {
   self.markers.forEach(m => m.setMap(null));
   self.markers = [];
   self.restaurants = restaurants;
-  console.log(restaurants);
-  console.log(self.restaurants);
 }
 
 /**
@@ -143,11 +141,19 @@ const fillRestaurantsHTML = (restaurants = self.restaurants) => {
 const createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
   li.className = 'grid-item';
+  const picture = document.createElement('picture');
+  li.append(picture);
+
+  const source1 = document.createElement('source');
+  source1.media = "(max-width: 350px)";
+  source1.srcset = DBHelper.imageUrlForRestaurant(restaurant , 'sm');
+  picture.append(source1);
+
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.alt ="An image of"+ restaurant.name +" Restaurant in " + restaurant.neighborhood ;
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  li.append(image);
+  image.src = DBHelper.imageUrlForRestaurant(restaurant , 'md');
+  picture.append(image);
 
   const name = document.createElement('h3');
   name.innerHTML = restaurant.name;

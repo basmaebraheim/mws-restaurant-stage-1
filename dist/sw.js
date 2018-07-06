@@ -1,4 +1,10 @@
 var staticCacheName = 'res-static-v1';
+var staticCacheName = 'res-static-v8';
+var contentImgsCache = 'res-content-imgs';
+var allCaches = [
+  staticCacheName,
+  contentImgsCache
+];
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
@@ -17,20 +23,8 @@ self.addEventListener('install', function(event) {
         'restaurant.html?id=10',
         'index.html',
         '/js/main.js',
-        '/js/dbhelper.js',
-        '/js/restaurant_info.js',
-        '/css/styles.css',
-        '/img/1.jpg',
-        '/img/2.jpg',
-        '/img/3.jpg',
-        '/img/4.jpg',
-        '/img/5.jpg',
-        '/img/6.jpg',
-        '/img/7.jpg',
-        '/img/8.jpg',
-        '/img/9.jpg',
-        '/img/10.jpg',
-        '/data/restaurants.json'
+        '/js/info.js',
+        '/css/styles.css'
        ]);
     })
   );
@@ -42,7 +36,7 @@ self.addEventListener('activate', function(event) {
       return Promise.all(
         cacheNames.filter(function(cacheName) {
           return cacheName.startsWith('res-') &&
-                 cacheName != staticCacheName;
+                !allCaches.includes(cacheName);
         }).map(function(cacheName) {
           return caches.delete(cacheName);
         })
@@ -52,14 +46,19 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
-  console.log('Fetch event for ', event.request.url);
+  var requestUrl = new URL(event.request.url);
+
+  if (requestUrl.origin === location.origin) {
+    if (requestUrl.pathname.startsWith('/images/')) {
+      event.respondWith(servePhoto(event.request));
+      return;
+    }
+  }
   event.respondWith(
     caches.match(event.request).then(function(response) {
       if (response) {
-        console.log('Found ', event.request.url, ' in cache');
         return response;
       }
-      console.log('Network request for ', event.request.url);
       return fetch(event.request)
 
 
@@ -69,4 +68,23 @@ self.addEventListener('fetch', function(event) {
       
     })
   );
+});
+function servePhoto(request) {
+  var storageUrl = request.url.replace(/-\d+px\.jpg$/, '');
+
+  return caches.open(contentImgsCache).then(function(cache) {
+    return cache.match(storageUrl).then(function(response) {
+      if (response) return response;
+
+      return fetch(request).then(function(networkResponse) {
+        cache.put(storageUrl, networkResponse.clone());
+        return networkResponse;
+      });
+    });
+  });
+}
+self.addEventListener('message', function(event) {
+  if (event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });

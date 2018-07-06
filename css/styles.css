@@ -407,6 +407,10 @@ table td {
   .filter-options select {
     margin: 5px;
   }
+  #restaurants-list .restaurant-img {
+    
+    min-height: 200px;
+  }
 }
 @media only screen and (max-width: 400px)  {
   

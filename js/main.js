@@ -155,6 +155,20 @@ const createRestaurantHTML = (restaurant) => {
   image.src = DBHelper.imageUrlForRestaurant(restaurant , 'md');
   picture.append(image);
 
+  const favorite = document.createElement('button');
+  favorite.innerHTML = '🎔';
+  favorite.classList.add = 'fav-btn';
+
+  favorite.onclick = function() {
+    const isFavNow = !restaurant.is_favorite;
+    DBHelper.updateFavoriteStatus(restaurant.id, isFavNow);
+    restaurant.is_favorite = !restaurant.is_favorite;
+    setFavElementClass(favorite , restaurant.is_favorite);
+  };
+  setFavElementClass(favorite , restaurant.is_favorite);
+
+  li.append(favorite);
+
   const name = document.createElement('h3');
   name.innerHTML = restaurant.name;
   li.append(name);
@@ -177,6 +191,22 @@ const createRestaurantHTML = (restaurant) => {
   return li
 }
 
+/**
+ *  change favorite element class after click.
+ */
+const setFavElementClass = (elem , fav) => {
+  if (!fav) {
+    elem.classList.remove('favorite');
+    elem.classList.add ='not-favorite';
+    elem.setAttribute('aria-label' , 'mark as favorite');
+
+  }else {
+    elem.classList.remove('not-favorite');
+    elem.classList.add = 'favorite';
+    elem.setAttribute('aria-label' , 'remove from favorites');
+  }
+
+}
 /**
  * Add markers for current restaurants to the map.
  */

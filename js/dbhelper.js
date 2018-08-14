@@ -10,11 +10,21 @@ class DBHelper {
       return Promise.resolve();
     }
   
-    return idb.open('restaurant', 1, function(upgradeDb) {
-      var store = upgradeDb.createObjectStore('restaurants', {
-        keyPath: 'id'
-      });
-      store.createIndex('by-date', 'time');
+    return idb.open('restaurant', 2, function(upgradeDb) {
+      switch (upgradeDb.oldVersion) {
+          case 0:
+            const restaurantsStore = upgradeDb.createObjectStore('restaurants', {
+              keyPath: 'id'
+            });
+            restaurantsStore.createIndex('by-date', 'time');
+          case 1:
+            var reviewsStore = upgradeDb.createObjectStore('reviews', {
+              keyPath: 'id'
+            });
+            reviewsStore.createIndex('resaurant', 'restaurant_id');
+
+      }
+      
     });
   }
   /**
@@ -87,6 +97,55 @@ class DBHelper {
     });
   }
 
+  /**
+   * Fetch restaurant reviews.
+   */
+  
+  static fetchRestaurantReviews(id) {
+       
+    return fetch(`http://localhost:1337/reviews/?restaurant_id=${id}`)
+      .then(response => response.json())
+      .then(reviews => {
+        DBHelper.openDatabase()
+          .then(db => {
+            if (!db) return;
+
+            let tx = db.transaction('reviews' , 'readwrite');
+            const store = tx.objectStore('reviews');
+            if (Array.isArray(reviews)) {
+              reviews.forEach(function(review) {
+                store.put(review);
+              });
+            } else {
+              store.put(reviews);
+            }
+          });
+          
+          return Promise.resolve(reviews);
+          console.log(reviews);
+      })
+      .catch(error => {
+        return DBHelper.getStoredReviewsById('reviews' , 'restaurant' , id)
+          ,then((storedReviews) => {
+            return Promise.resolve(storedReviews);
+          });
+      });
+      
+  
+  } 
+  /**
+   * Fetch reviews from IDB;
+   */
+  static getStoredReviewsById(table , idx , id){
+    return this.openDatabase()
+      .then(function(db) {
+        if (!db) return;
+
+        const store = db.transaction(table).objectStore(table);
+        const indexId = store.index(idx);
+        return indexId.getAll(id);
+      });
+  }
   /**
    * Fetch restaurants by a cuisine type with proper error handling.
    */
@@ -236,4 +295,22 @@ class DBHelper {
     return marker;
   }
 
+  static updateFavoriteStatus(restaurantId, isFavorite) {
+    fetch(`http://localhost:1337/restaurants/${restaurantId}/?is_favorite=${isFavorite}` ,{
+      method: 'PUT'
+    })
+    .then(() => {
+      console.log('changed');
+      DBHelper.openDatabase()
+        .then(db => {
+          const tx = db.transaction('restaurants' , 'readwrite');
+          const restauransStore = tx.objectStore('restaurants');
+          restauransStore.get(restaurantId)
+            .then(restaurant => {
+              restaurant.is_favorite = isFavorite;
+              restauransStore.put(restaurant);
+            });
+        });
+    })
+  }
 }

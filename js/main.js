@@ -152,7 +152,29 @@ const createRestaurantHTML = (restaurant) => {
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.alt ="An image of"+ restaurant.name +" Restaurant in " + restaurant.neighborhood ;
-  image.src = DBHelper.imageUrlForRestaurant(restaurant , 'md');
+  const config = {
+    threshold: 0.1
+  };
+  let observer;
+  if ('IntersectionObserver' in window) {
+    observer = new IntersectionObserver(onChange , config);
+    observer.observe(image);
+  } else {
+    console.log('IntersectionObserver is not supported');
+    loadImage(image);
+  }
+  const loadImage = image => {
+    image.src = DBHelper.imageUrlForRestaurant(restaurant , 'md');
+
+  }
+  function onChange (changes , observer) {
+      changes.forEach(change => {
+        if (change.intersectionRatio > 0) {
+          loadImage(change.target);
+          observer.unobserve(change.target);
+        }
+      })
+  }
   picture.append(image);
 
   const favorite = document.createElement('button');

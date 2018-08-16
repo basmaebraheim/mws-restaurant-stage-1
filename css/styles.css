@@ -307,6 +307,9 @@ nav h1 a {
 #reviews-container {
   order:2;
 }
+#form-container{
+  order: 3;
+}
 #reviews-container table {
   width: 100%;
   display: block;

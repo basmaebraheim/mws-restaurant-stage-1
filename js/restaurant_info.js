@@ -7,7 +7,7 @@ var map;
 window.initMap = () => {
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) { // Got an error!
-      console.error(error);
+      console.log(error);
     } else {
       self.map = new google.maps.Map(document.getElementById('map'), {
         zoom: 16,
@@ -36,7 +36,7 @@ const fetchRestaurantFromURL = (callback) => {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
-        console.error(error);
+        //console.log(error);
         return;
       }
       fillRestaurantHTML();
@@ -69,6 +69,9 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
   }
   // fill reviews
   fillReviewsHTML(restaurant.id);
+  // add reviews form
+  addReviewFormHtml();
+
 }
 
 /**
@@ -154,6 +157,92 @@ const createReviewHTML = (review) => {
   return li;
 }
 
+const addReviewFormHtml = () => {
+  const formContainer  = document.getElementById("form-container");
+  const form = document.createElement('form');
+  form.id = 'review-form';
+  const header = document.createElement('h2');
+  header.innerHTML = 'Add Review';
+  form.append(header);
+  const newLine = document.createElement('br');
+  form.append(newLine);
+
+
+  const reviewer_label = document.createElement('label');
+	reviewer_label.htmlFor = 'author_name';
+	reviewer_label.innerHTML = 'Your name:';
+  form.append(reviewer_label);
+
+
+	const author_name = document.createElement('input');
+	author_name.type = 'text';
+	author_name.name = 'name';
+	author_name.id = 'review-author';
+  form.append(author_name);
+  const newLine1 = document.createElement('br');
+  form.append(newLine1);
+
+	const rating_label = document.createElement('label');
+	rating_label.htmlFor = 'rating';
+	rating_label.innerHTML = 'Rating:';
+  form.append(rating_label);
+
+
+	const rating = document.createElement('select');
+	rating.name = 'rating';
+	rating.id = 'review-rating';
+	for (let index = 1; index < 6; index++) {
+
+		const option = document.createElement('option');
+		option.innerHTML = index;
+		option.value = index;
+		rating.append(option);
+	}
+  form.append(rating);
+  const newLine2 = document.createElement('br');
+  form.append(newLine2);
+
+
+	const comment_label = document.createElement('label');
+	comment_label.htmlFor = 'comments';
+	comment_label.innerHTML = 'Comment:';
+  form.append(comment_label);
+
+
+	const comment_text = document.createElement('textarea');
+	comment_text.className = 'textarea';
+	comment_text.name = 'comments';
+	comment_text.id = 'review-comments';
+  form.append(comment_text);
+  const newLine3 = document.createElement('br');
+  form.append(newLine3);
+
+  const id_label = document.createElement('label');
+	id_label.htmlFor = 'restaurant_id';
+	id_label.innerHTML = 'restaurant id:';
+  form.append(id_label);
+
+
+	const restaurant_id = document.createElement('input');
+	restaurant_id.className = 'resId';
+	restaurant_id.name = 'restaurant_id';
+	restaurant_id.id = 'restaurant_id';
+  form.append(restaurant_id);
+  const newLine4 = document.createElement('br');
+  form.append(newLine4);
+
+	const submitReview = document.createElement('button');
+	submitReview.className = 'button';
+	submitReview.id = 'submitReview';
+	submitReview.innerHTML = 'Submit Review';
+	submitReview.onclick = addReview;
+  form.append(submitReview);
+
+  formContainer.appendChild(form);
+  console.log("add form");
+
+}
+
 /**
  * Add restaurant name to the breadcrumb navigation menu
  */
@@ -179,4 +268,75 @@ const getParameterByName = (name, url) => {
   if (!results[2])
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
+
+/**
+ * Add review
+ */
+const addReview = () => {
+  event.preventDefault();
+  let name = document.getElementById("review-author").value;
+  let rating = document.getElementById('review-rating').value;
+  let comments = document.getElementById("review-comments").value;
+  let restaurant_id = document.getElementById("restaurant_id").value;
+  const review = [name , rating , comments , restaurant_id];
+
+  const newReview = {
+    id: restaurant_id,
+    rating : rating,
+    name : name,
+    comments: comments,
+    createdAt : new Date()
+  };
+  console.log(newReview);
+  DBHelper.addReview(newReview);
+  addReviewHtml(newReview);
+  document.getElementById("review-form").reset();
+
+}
+
+/**
+ * add new review to UI
+ */
+const addReviewHtml = (review) => {
+  const ul = document.getElementById('reviews-list');
+  const li = document.createElement('li');  
+  li.role="tree-item";
+  const reviewHead = document.createElement('div');
+  li.appendChild(reviewHead);
+
+  if (!navigator.onLine) {
+    const connection_status = document.createElement('p');
+    connection_status.classList.add('offline_label');
+    connection_status.innerHTML = "Offline";
+    li.classList.add("reviews_offline");
+    li.appendChild(connection_status);
+
+  }
+  const name = document.createElement('h3');
+  name.innerHTML = review.name;
+  name.className = 'name';
+  name.setAttribute("tabindex","0");  
+  reviewHead.appendChild(name);
+
+  const date = document.createElement('p');
+  date.innerHTML = review.date;
+  date.className = 'date';
+  date.setAttribute("tabindex","0");
+  reviewHead.appendChild(date);
+  
+  const rating = document.createElement('p');
+  rating.innerHTML = `Rating: ${review.rating}`;
+  rating.className = 'rating';
+  rating.setAttribute("tabindex","0");
+  li.appendChild(rating);
+  
+  const comments = document.createElement('p');
+  comments.innerHTML = review.comments;
+  li.appendChild(comments);
+  comments.setAttribute("tabindex","0");
+  li.setAttribute("role","article");
+  
+  ul.appendChild(li);
+
 }

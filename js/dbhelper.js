@@ -313,4 +313,61 @@ class DBHelper {
         });
     })
   }
+  /**
+   * Add Review To Db
+   */
+  static addReview(newReview ) {
+    console.log(restaurant);
+    const offline_obj = {
+      name: 'addReview',
+      data: newReview,
+      object_type: 'review'
+    };
+    if (!navigator.onLine && (offline_obj.name === 'addReview')) {
+      DBHelper.sendDataWhenOnline(offline_obj);
+      return;
+    }
+    let reviewSend = {
+      "name": newReview.name,
+      "rating": parseInt(newReview.rating),
+      "comments":newReview.comments,
+      "restaurant_id": newReview.id
+    };
+    console.log(reviewSend);
+    var fetch_options = {
+      method: 'POST',
+      body: JSON.stringify(reviewSend),
+      headers: new Headers({
+        'Content-Type': 'application/json' 
+      })
+    };
+    fetch('http://localhost:1337/reviews', fetch_options).then((response) => {
+      const contentType = response.headers.get('content-type');
+      if(contentType && contentType.indexOf('application/json') !== -1) {
+        return response.json();
+      } else { return 'API call successfull'}
+    })
+    .then((data) => { console.log('fetch successfull') })
+    .catch((error) => console.log(error));
+    
+  }
+  static sendDataWhenOnline(offline_obj) {
+    localStorage.setItem('data', JSON.stringify(offline_obj.data));
+    window.addEventListener('online', (event) => {
+      let data = JSON.parse(localStorage.getItem('data'));
+      [...document.querySelectorAll(".reviews_offline")]
+      .forEach(el => {
+        el.classList.remove("reviews_offline");
+        el.querySelector(".offline_label").remove();
+      });
+      if (data !== null) {
+        console.log(data);
+        if (offline_obj.name === 'addReview') {
+          DBHelper.addReview(offline_obj.data);
+        }
+        localStorage.removeItem('data');
+      }
+    });
+  }
 }
+

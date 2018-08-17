@@ -1,0 +1,316 @@
+@charset "utf-8";
+/* CSS Document */
+
+body,td,th,p{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12pt;
+	color: #333;
+	line-height: 1.5;
+}
+body {
+	background-color: #fdfdfd;
+	margin: 0;
+	position:relative;
+}
+ul, li {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12pt;
+	color: #333;
+}
+a {
+	color: orange;
+	text-decoration: none;
+}
+a:hover, a:focus {
+	color: #3397db;
+	text-decoration: none;
+}
+a img{
+	border: none 0px #fff;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0 0 20px;
+}
+article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+#maincontent {
+  background-color: #f3f3f3;
+  min-height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+#footer {
+  background-color: #252831;
+  color: #aaa;
+  font-size: 8pt;
+  letter-spacing: 1px;
+  padding: 25px;
+  text-align: center;
+  text-transform: uppercase;
+  width:calc(100% - 50px);
+}
+
+/* ====================== Navigation ====================== */
+nav {
+    width: 100%;
+    
+    background-color: #252831;
+}
+nav h1 {
+    margin: auto;
+    padding: 25px;
+    text-align:center;
+}
+nav h1 a {
+    color: #fff;
+    font-size: 14pt;
+    font-weight: 200;
+    letter-spacing: 10px;
+    text-transform: uppercase;
+}
+
+
+#breadcrumb {
+    padding: 10px 40px 16px;
+    list-style: none;
+    background-color: #eee;
+    font-size: 17px;
+    margin: 0;
+    width: calc(100% - 80px);
+}
+
+/* Display list items side by side */
+#breadcrumb li {
+  display: inline;
+}
+
+/* Add a slash symbol (/) before/behind each list item */
+#breadcrumb li+li:before {
+  padding: 8px;
+  color: black;
+  content: "/\00a0";
+}
+
+/* Add a color to all links inside the list */
+#breadcrumb li a {
+  color: #025092;
+  text-decoration: none;
+}
+/* Add a color on mouse-over */
+#breadcrumb li a:hover,
+#breadcrumb li a:focus {
+  outline: none;
+  color: #FFA500;
+  text-decoration: underline;
+}
+nav h1 a:hover,
+nav h1 a:focus {
+  outline: none;
+  color: #FFA500;  
+}
+#footer a strong:hover,
+nav a strong:focus {
+  outline: none;
+  color: #3397DB;
+  
+}
+
+/* ====================== Map ====================== */
+#map-container {
+    width: 100%;
+}
+#map {
+    height: 350px;
+    width: 100%;
+}
+#toggle_map {
+  border: none;
+  background-color: #8A4600;
+  color: white;
+  font-size: 17px;
+  margin: 8px;
+}
+
+/* ====================== Restaurant Details ====================== */
+.inside header {
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    
+  }
+  #maincontent {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .scip-link{
+    position: absolute;
+    top:-100px;
+    left: -100px;
+    background: #bf1722;
+    color: white;
+    padding: 8px;
+    z-index: 100;
+  }
+  .scip-link:focus{
+    top:0;
+  }
+  
+  .inside #footer {
+    bottom: 0;
+  }
+  #restaurant-name {
+    color: #6B3B00;
+    font-family: Arial,sans-serif;
+    font-size: 20pt;
+    font-weight: 200;
+    letter-spacing: 0;
+    margin: 15px 0 30px;
+    text-transform: uppercase;
+    line-height: 1.1;
+  }
+  #restaurant-img {
+    width: 100%;
+    border-radius: 30px 0px 0px 0px;
+    
+  }
+  #restaurant-address {
+    font-size: 12pt;
+    margin: 10px 0px;
+  }
+  #restaurant-cuisine {
+    background-color: #333;
+    color: #ddd;
+    font-size: 12pt;
+    font-weight: 300;
+    letter-spacing: 10px;
+    margin: 0 0 20px;
+    padding: 2px 0;
+    text-align: center;
+    text-transform: uppercase;
+    width: 100%;
+  }
+  #restaurant-container, #reviews-container , #form-container {
+    border-bottom: 1px solid #d9d9d9;
+    border-top: 1px solid #fff;
+    width: 100%;
+  }
+  #map-container {
+    order: 1;
+  }
+  .content{
+    order:2;
+    padding: 10px 20px 30px;
+    width: calc(100% - 40px);
+    max-width: 660px;
+    margin: auto;
+  }
+  
+  #reviews-container table {
+    width: 100%;
+    display: block;
+    font-size: 24px;
+  }
+  table td {
+    font-size: 16px;
+  }
+  #reviews-container h2 , #form-container h2 {
+    color: #6B3B00;
+    font-size: 24pt;
+    font-weight: 300;
+    letter-spacing: -1px;
+  }
+  #form-container label , #form-container button {
+    font-size: 18px;
+    margin-left: 5px;
+  }
+  #form-container input , #form-container select ,#form-container textarea , #form-container button {
+    min-width: 200px;
+    margin-left: 5px;
+    margin-top: 20px;
+  }
+  #form-container textarea 
+  {
+    height: 125px;
+  }
+  #form-container button
+  {
+    background-color: #8A4600;
+    color: #d9d9d9;
+  }
+  #reviews-list {
+    margin: 0;
+    padding: 0;
+  }
+  #reviews-list li {
+    background-color: #fff;
+    border: 2px solid #f3f3f3;
+    border-radius: 30px 0px 0px 0px;
+    display: block;
+    list-style-type: none;
+    margin: 0 0 30px;
+    overflow: hidden;
+    padding: 0 0px 20px;
+    position: relative;
+    width: 100%;
+    max-height: 350px;
+  }
+  
+  #reviews-list li div {
+    background-color: #444;
+    padding: 8px 30px 10px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  #reviews-list li div p{
+    color: #fff;  
+    width: 50%;
+    padding-top: 13px;
+  }
+  #reviews-list li div .date{
+    color: #fff;  
+    width: 50%;
+    text-align: right;
+  }
+  #reviews-list li div .name{
+    color: #fff;  
+    width: 50%;
+    font-size: 20px;
+    text-align: left;
+    padding-top: 21px;
+  }
+  #reviews-list li .rating {
+    background-color: #8A4600;
+    border-bottom: 3px solid #eee;
+    border-radius: 4px;
+    color: #fff;
+    display: inline-block;
+    font-size: 10pt;
+    padding: 8px 30px 10px;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+  #reviews-list li > p {
+    margin: 20px 30px 0px;  
+  }
+  #restaurant-hours td {
+    color: #666;
+  }
+
+  /*@media only screen and (min-width: 750px) {
+    #map-container {
+      order: 2;
+      
+    }
+    .content{
+      order:1;
+    }
+    #map-container , .content{
+      width: calc((100% - 40px) / 2);
+      margin: auto;
+    }
+    
+    
+  }*/

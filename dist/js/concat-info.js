@@ -122,7 +122,6 @@ class DBHelper {
           });
           
           return Promise.resolve(reviews);
-          console.log(reviews);
       })
       .catch(error => {
         return DBHelper.getStoredReviewsById('reviews' , 'restaurant' , id)
@@ -246,7 +245,6 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant , size) {
-    console.log("get image");
     /*if(restaurant.photograph){
       switch(size) {
         case "xs":
@@ -270,7 +268,6 @@ class DBHelper {
     */
   
     if(restaurant.photograph){
-      console.log("get image");
       return (`/img/${restaurant.photograph}.webp`);
     }else{
       return (`#`);
@@ -303,7 +300,6 @@ class DBHelper {
       method: 'PUT'
     })
     .then(() => {
-      console.log('changed');
       DBHelper.openDatabase()
         .then(db => {
           const tx = db.transaction('restaurants' , 'readwrite');
@@ -320,7 +316,6 @@ class DBHelper {
    * Add Review To Db
    */
   static addReview(newReview ) {
-    console.log(restaurant);
     const offline_obj = {
       name: 'addReview',
       data: newReview,
@@ -336,7 +331,6 @@ class DBHelper {
       "comments":newReview.comments,
       "restaurant_id": newReview.id
     };
-    console.log(reviewSend);
     var fetch_options = {
       method: 'POST',
       body: JSON.stringify(reviewSend),
@@ -364,7 +358,6 @@ class DBHelper {
         el.querySelector(".offline_label").remove();
       });
       if (data !== null) {
-        console.log(data);
         if (offline_obj.name === 'addReview') {
           DBHelper.addReview(offline_obj.data);
         }
@@ -526,11 +519,11 @@ const createReviewHTML = (review) => {
   name.setAttribute("tabindex","0");  
   reviewHead.appendChild(name);
 
-  const date = document.createElement('p');
+  /*const date = document.createElement('p');
   date.innerHTML = review.date;
   date.className = 'date';
   date.setAttribute("tabindex","0");
-  reviewHead.appendChild(date);
+  reviewHead.appendChild(date);*/
   
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;
@@ -629,7 +622,6 @@ const addReviewFormHtml = () => {
   form.append(submitReview);
 
   formContainer.appendChild(form);
-  console.log("add form");
 
 }
 
@@ -678,7 +670,6 @@ const addReview = () => {
     comments: comments,
     createdAt : new Date()
   };
-  console.log(newReview);
   DBHelper.addReview(newReview);
   addReviewHtml(newReview);
   document.getElementById("review-form").reset();

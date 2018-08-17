@@ -82,7 +82,6 @@ gulp.task('info-script-dist', gulp.series('info-js-concat' , function () {
  gulp.task('style-dist', function(done){
     gulp.src('css/*.css')
     .pipe(sourcemaps.init())
-    .pipe(concat('styles.css'))
     .pipe(minify())
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('dist/css/'));

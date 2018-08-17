@@ -149,11 +149,11 @@ const createReviewHTML = (review) => {
   name.setAttribute("tabindex","0");  
   reviewHead.appendChild(name);
 
-  const date = document.createElement('p');
+  /*const date = document.createElement('p');
   date.innerHTML = review.date;
   date.className = 'date';
   date.setAttribute("tabindex","0");
-  reviewHead.appendChild(date);
+  reviewHead.appendChild(date);*/
   
   const rating = document.createElement('p');
   rating.innerHTML = `Rating: ${review.rating}`;
@@ -252,7 +252,6 @@ const addReviewFormHtml = () => {
   form.append(submitReview);
 
   formContainer.appendChild(form);
-  console.log("add form");
 
 }
 
@@ -301,7 +300,6 @@ const addReview = () => {
     comments: comments,
     createdAt : new Date()
   };
-  console.log(newReview);
   DBHelper.addReview(newReview);
   addReviewHtml(newReview);
   document.getElementById("review-form").reset();

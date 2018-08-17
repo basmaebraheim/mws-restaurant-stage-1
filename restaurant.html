@@ -5,7 +5,7 @@
   <!-- Normalize.css for better cross-browser consistency -->
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <!-- Main CSS file -->
-  <link rel="stylesheet" href="css/styles.css" type="text/css">
+  <link rel="stylesheet" href="css/restaurant-style.css" type="text/css">
   <link rel="manifest" href="/manifest.json">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#3f51b5"/>
@@ -35,28 +35,30 @@
     <section id="map-container">
       <div id="map" name="map" tabindex="0" role="application" style="display: none"></div>
     </section>
-    <!-- Beginning restaurant -->
-    <section id="restaurant-container"  role="article">
-        <h2 id="restaurant-name"></h2>
-        <div class="card">
-          <picture>
-              <img id="restaurant-img" alt="restaurant image">
-          </picture>
-          <p id="restaurant-cuisine"></p>
-          <p id="restaurant-address"></p>
-        </div>
-      <table id="restaurant-hours" role="grid" aria-rowcount="7" aria-colcount="2"></table>
-    </section>
-    <!-- end restaurant -->
-    <!-- Beginning reviews -->
-    <section id="reviews-container" role="feed">
-      <ul id="reviews-list"></ul>
-    </section>
-    <!-- End reviews -->
-    <!-- start form -->
-    <section id="form-container">
-    </section>
-    <!-- End form -->
+    <div class="content">
+      <!-- Beginning restaurant -->
+      <section id="restaurant-container"  role="article">
+          <h2 id="restaurant-name"></h2>
+          <div class="card">
+            <picture>
+                <img id="restaurant-img" alt="restaurant image">
+            </picture>
+            <p id="restaurant-cuisine"></p>
+            <p id="restaurant-address"></p>
+          </div>
+        <table id="restaurant-hours" role="grid" aria-rowcount="7" aria-colcount="2"></table>
+      </section>
+      <!-- end restaurant -->
+      <!-- Beginning reviews -->
+      <section id="reviews-container" role="feed">
+        <ul id="reviews-list"></ul>
+      </section>
+      <!-- End reviews -->
+      <!-- start form -->
+      <section id="form-container">
+      </section>
+      <!-- End form -->
+    </div>
   </main>
   <!-- End main -->
 

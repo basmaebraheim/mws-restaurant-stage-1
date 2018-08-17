@@ -5,6 +5,19 @@ var map;
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
+  const map_container = document.getElementById("map-container");
+  const toggle_map = document.createElement('button');
+  toggle_map.innerHTML = "Show Map";
+  toggle_map.id = "toggle_map";
+  toggle_map.onclick= function() {
+    if (document.getElementById('map').style.display === 'none')      
+      {        
+        document.getElementById('map').style.display = 'block';
+        document.getElementById('toggle_map').style.display = 'none';    
+      } 
+  } 
+  map_container.appendChild(toggle_map);
+
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) { // Got an error!
       console.log(error);

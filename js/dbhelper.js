@@ -246,7 +246,8 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant , size) {
-    if(restaurant.photograph){
+    console.log("get image");
+    /*if(restaurant.photograph){
       switch(size) {
         case "xs":
               return (`/images/${restaurant.photograph}-200_xs.jpg`);
@@ -265,14 +266,16 @@ class DBHelper {
       }
     } else{
         return (`#`);
-      }
-  }
-    /*if(restaurant.photograph){
-      console.log("/images/${restaurant.photograph}-400_sm.jpg");
-      return (`/images/${restaurant.photograph}-400_sm.jpg`);
+    }
+    */
+  
+    if(restaurant.photograph){
+      console.log("get image");
+      return (`/img/${restaurant.photograph}.webp`);
     }else{
       return (`#`);
-    }*/
+    }
+  }
   
 
   /**

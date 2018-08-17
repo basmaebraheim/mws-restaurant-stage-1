@@ -246,7 +246,8 @@ class DBHelper {
    * Restaurant image URL.
    */
   static imageUrlForRestaurant(restaurant , size) {
-    if(restaurant.photograph){
+    console.log("get image");
+    /*if(restaurant.photograph){
       switch(size) {
         case "xs":
               return (`/images/${restaurant.photograph}-200_xs.jpg`);
@@ -265,14 +266,16 @@ class DBHelper {
       }
     } else{
         return (`#`);
-      }
-  }
-    /*if(restaurant.photograph){
-      console.log("/images/${restaurant.photograph}-400_sm.jpg");
-      return (`/images/${restaurant.photograph}-400_sm.jpg`);
+    }
+    */
+  
+    if(restaurant.photograph){
+      console.log("get image");
+      return (`/img/${restaurant.photograph}.webp`);
     }else{
       return (`#`);
-    }*/
+    }
+  }
   
 
   /**
@@ -379,6 +382,19 @@ var map;
  * Initialize Google map, called from HTML.
  */
 window.initMap = () => {
+  const map_container = document.getElementById("map-container");
+  const toggle_map = document.createElement('button');
+  toggle_map.innerHTML = "Show Map";
+  toggle_map.id = "toggle_map";
+  toggle_map.onclick= function() {
+    if (document.getElementById('map').style.display === 'none')      
+      {        
+        document.getElementById('map').style.display = 'block';
+        document.getElementById('toggle_map').style.display = 'none';    
+      } 
+  } 
+  map_container.appendChild(toggle_map);
+
   fetchRestaurantFromURL((error, restaurant) => {
     if (error) { // Got an error!
       console.log(error);

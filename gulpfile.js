@@ -11,6 +11,8 @@ var babelify    = require('babelify');
 var source      = require('vinyl-source-stream');
 var buffer      = require('vinyl-buffer');
 var livereload  = require('gulp-livereload');
+const webp = require('gulp-webp');
+const $ = require('gulp-load-plugins')();
 
 var browserSync = require('browser-sync').create();
 browserSync.init({
@@ -40,6 +42,45 @@ gulp.task('copy-restaurant', function(done){
     done();
  });
 
+// convert images to webP.
+gulp.task('webp-images', () =>
+  gulp.src('img/*.jpg')
+  .pipe(webp())
+  .pipe(gulp.dest('img'))
+);
+// image responsive
+gulp.task('images-resize', function () {
+  return gulp.src('img/*')
+    .pipe($.responsive({
+      // Resize all JPEG/WebP images to sizes: 300, 433, 552, 653, 752, 800.
+      '*.{jpg,webp}': [{
+        width: 300,
+        rename: { suffix: '_300' },
+      }, {
+        width: 433,
+        rename: { suffix: '_433' },
+      }, {
+        width: 552,
+        rename: { suffix: '_552' },
+      }, {
+        width: 653,
+        rename: { suffix: '_653' },
+      }, {
+        width: 752,
+        rename: { suffix: '_752' },
+      }, {
+        width: 800,
+        rename: { suffix: '_800' },
+      }],
+    }, {
+      quality: 70,
+      progressive: true,
+      compressionLevel: 6,
+      withMetadata: false,
+    }))
+    .pipe(gulp.dest('dist/img'));
+});
+  
 gulp.task('main-js-concat', function(done){
     gulp.src(['js/dbhelper.js' , 'js/main.js' , 'js/sw-registration.js'])
     .pipe(concat('concat-main.js'))
@@ -53,19 +94,6 @@ gulp.task('main-js-concat', function(done){
     done();
  });
  
- gulp.task('main-script-dist', gulp.series('main-js-concat' , function () {
-    // app.js is your main JS file with all your module inclusions
-    return browserify({entries: './dist/js/concat-main.js', debug: true})
-        .transform("babelify", { presets: ['env'] })
-        .bundle()
-        .pipe(source('main.js'))
-        .pipe(buffer())
-        .pipe(sourcemaps.init())
-        .pipe(uglify())
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest('./dist/js'))
-        .pipe(livereload());
-}));
 gulp.task('info-script-dist', gulp.series('info-js-concat' , function () {
     // app.js is your main JS file with all your module inclusions
     return browserify({entries: './dist/js/concat-info.js', debug: true})
@@ -87,8 +115,21 @@ gulp.task('info-script-dist', gulp.series('info-js-concat' , function () {
     .pipe(gulp.dest('dist/css/'));
     done();
  });
+ gulp.task('sw-dist', function(done){
+  return browserify({entries: 'sw.js', debug: true})
+  .transform("babelify", { presets: ['env'] })
+  .bundle()
+  .pipe(source('sw.js'))
+  .pipe(buffer())
+  .pipe(sourcemaps.init())
+  .pipe(uglify())
+  .pipe(sourcemaps.write())
+  .pipe(gulp.dest('./dist'))
+  .pipe(livereload());
+});
+
  
- gulp.task('default', gulp.series('copy-index','copy-restaurant','copy-images','style-dist', 'main-script-dist', 'info-script-dist', function(done) {
+ gulp.task('default', gulp.series('copy-index','copy-restaurant','copy-images' , 'webp-images' , 'images-resize','style-dist', 'main-script-dist', 'info-script-dist', 'sw-dist' , function(done) {
     gulp.watch('index.html', gulp.series('copy-index'));
     gulp.watch('restaurant.html', gulp.series('copy-restaurant'));
     gulp.watch('css/*.css', gulp.series('style-dist'));

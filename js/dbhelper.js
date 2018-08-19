@@ -88,12 +88,18 @@ class DBHelper {
       } else {
         // Filter restaurants to have only given id
         const restaurant = restaurants.filter(r => r.id == id);
-        callback(null, restaurant[0]);
+        return restaurant;
       }
-    }).then(() => {
-      fetch(DBHelper.DATABASE_URL + '/' + id).then(response => response.json())
-      .then(restaurant => callback(null, restaurant))
-      .catch(e => callback(e, null));
+    }).then((cachedRestaurant) => {
+        fetch(DBHelper.DATABASE_URL + '/' + id).then(response => response.json())
+        .then(restaurant => {
+          if (!restaurant){
+            callback(null, cachedRestaurant);
+          }else{
+            callback(null, restaurant);
+          }
+        })
+        .catch(e => callback(e, null));
     });
   }
 

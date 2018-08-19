@@ -87,6 +87,19 @@ gulp.task('main-js-concat', function(done){
     .pipe(gulp.dest('dist/js/'));
     done();
  });
+ gulp.task('main-script-dist', gulp.series('main-js-concat' , function () {
+  // app.js is your main JS file with all your module inclusions
+  return browserify({entries: './dist/js/concat-main.js', debug: true})
+      .transform("babelify", { presets: ['env'] })
+      .bundle()
+      .pipe(source('info.js'))
+      .pipe(buffer())
+      .pipe(sourcemaps.init())
+      .pipe(uglify())
+      .pipe(sourcemaps.write())
+      .pipe(gulp.dest('./dist/js'))
+      .pipe(livereload());
+}));
  gulp.task('info-js-concat', function(done){
     gulp.src(['js/dbhelper.js' , 'js/restaurant_info.js' , 'js/sw-registration.js'])
     .pipe(concat('concat-info.js'))
@@ -107,6 +120,7 @@ gulp.task('info-script-dist', gulp.series('info-js-concat' , function () {
         .pipe(gulp.dest('./dist/js'))
         .pipe(livereload());
 }));
+
  gulp.task('style-dist', function(done){
     gulp.src('css/*.css')
     .pipe(sourcemaps.init())

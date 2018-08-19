@@ -77,30 +77,67 @@ class DBHelper {
     });
   };
   /**
+   * Fetch cached restaurant.
+   */
+  static showCachedRestaurant(id) {
+  
+    return DBHelper.openDatabase().then(function(db) {
+      if (!db ) return;
+  
+      var index = db.transaction('restaurants')
+        .objectStore('restaurants');
+      return index.getAll().then((restaurants) => {
+        // Filter restaurants to have only given id
+        const restaurant = restaurants.filter(r => r.id == id);
+        return restaurant[0];
+        
+      });
+    });
+  };
+  /**
+   * Fetch cached restaurant reviews by id.
+   */
+  static showCachedReviews(id) {
+  
+    return DBHelper.openDatabase().then(function(db) {
+      if (!db ) return;
+  
+      var index = db.transaction('reviews')
+        .objectStore('reviews');
+      return index.getAll().then((allReviews) => {
+        // Filter reviews to have only given id
+        const reviews = allReviews.filter(r => r.restaurant_id == id);
+        return reviews;
+        
+      });
+    });
+  };
+  /**
    * Fetch a restaurant by its ID.
    */
   
   static fetchRestaurantById(id, callback) {
     // Fetch a restaurant by its ID.
-    DBHelper.showCachedRestaurants((error, restaurants) => {
-      if (error) {
-        callback(error, null);
-      } else {
-        // Filter restaurants to have only given id
-        const restaurant = restaurants.filter(r => r.id == id);
-        return restaurant;
-      }
-    }).then((cachedRestaurant) => {
-        fetch(DBHelper.DATABASE_URL + '/' + id).then(response => response.json())
-        .then(restaurant => {
-          if (!restaurant){
-            callback(null, cachedRestaurant);
-          }else{
-            callback(null, restaurant);
-          }
-        })
-        .catch(e => callback(e, null));
+    fetch(DBHelper.DATABASE_URL + '/' + id).then(response => response.json())
+    .then(restaurant => {
+      DBHelper.openDatabase().then(function(db) {
+        if (!db) return;
+    
+        var tx = db.transaction('restaurants', 'readwrite');
+        var store = tx.objectStore('restaurants');
+        store.put(restaurant);
+      });
+
+      if (restaurant) {
+        return callback(null, restaurant);
+      } 
+    })
+    .catch(e => {
+      DBHelper.showCachedRestaurant(id).then(cachedRestaurant => {
+        return callback(null, cachedRestaurant);
+      });
     });
+
   }
 
   /**
@@ -130,27 +167,15 @@ class DBHelper {
           return Promise.resolve(reviews);
       })
       .catch(error => {
-        return DBHelper.getStoredReviewsById('reviews' , 'restaurant' , id)
-          ,then((storedReviews) => {
+        return DBHelper.showCachedReviews(id)
+          .then((storedReviews) => {
             return Promise.resolve(storedReviews);
           });
       });
       
   
   } 
-  /**
-   * Fetch reviews from IDB;
-   */
-  static getStoredReviewsById(table , idx , id){
-    return this.openDatabase()
-      .then(function(db) {
-        if (!db) return;
-
-        const store = db.transaction(table).objectStore(table);
-        const indexId = store.index(idx);
-        return indexId.getAll(id);
-      });
-  }
+  
   /**
    * Fetch restaurants by a cuisine type with proper error handling.
    */
@@ -373,7 +398,6 @@ class DBHelper {
   }
 }
 
-
 let restaurant;
 var map;
 
@@ -423,6 +447,7 @@ const fetchRestaurantFromURL = (callback) => {
     callback(error, null);
   } else {
     DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+      console.log(restaurant);
       self.restaurant = restaurant;
       if (!restaurant) {
         //console.log(error);

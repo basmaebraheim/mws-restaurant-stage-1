@@ -13,6 +13,8 @@ var buffer      = require('vinyl-buffer');
 var livereload  = require('gulp-livereload');
 const webp = require('gulp-webp');
 const $ = require('gulp-load-plugins')();
+var gzip = require('gulp-gzip');
+var htmlmin = require('gulp-htmlmin');
 
 var browserSync = require('browser-sync').create();
 browserSync.init({
@@ -22,11 +24,13 @@ browserSync.stream();
 
 gulp.task('copy-index', function(done){
     gulp.src('index.html')
+    .pipe(htmlmin({collapseWhitespace: true}))
     .pipe(gulp.dest('./dist'));
     done();
 });
 gulp.task('copy-restaurant', function(done){
     gulp.src('restaurant.html')
+    .pipe(htmlmin({collapseWhitespace: true}))
     .pipe(gulp.dest('./dist'));
     done();
 });
@@ -82,33 +86,34 @@ gulp.task('images-resize', function () {
 });
   
 gulp.task('main-js-concat', function(done){
-    gulp.src(['js/dbhelper.js' , 'js/main.js' , 'js/sw-registration.js'])
+    gulp.src(['js/main-dbhelper.js' , 'js/main.js' , 'js/sw-registration.js'])
     .pipe(concat('concat-main.js'))
     .pipe(gulp.dest('dist/js/'));
     done();
  });
- gulp.task('main-script-dist', gulp.series('main-js-concat' , function () {
-  // app.js is your main JS file with all your module inclusions
+gulp.task('main-script-dist', gulp.series('main-js-concat' , function () {
+  
   return browserify({entries: './dist/js/concat-main.js', debug: true})
       .transform("babelify", { presets: ['env'] })
       .bundle()
-      .pipe(source('info.js'))
+      .pipe(source('main.js'))
       .pipe(buffer())
       .pipe(sourcemaps.init())
       .pipe(uglify())
+      //.pipe(gzip())
       .pipe(sourcemaps.write())
       .pipe(gulp.dest('./dist/js'))
       .pipe(livereload());
 }));
  gulp.task('info-js-concat', function(done){
-    gulp.src(['js/dbhelper.js' , 'js/restaurant_info.js' , 'js/sw-registration.js'])
+    gulp.src(['js/restaurant-dbhelper.js' , 'js/restaurant_info.js' , 'js/sw-registration.js'])
     .pipe(concat('concat-info.js'))
     .pipe(gulp.dest('dist/js/'));
     done();
  });
  
 gulp.task('info-script-dist', gulp.series('info-js-concat' , function () {
-    // app.js is your main JS file with all your module inclusions
+
     return browserify({entries: './dist/js/concat-info.js', debug: true})
         .transform("babelify", { presets: ['env'] })
         .bundle()
@@ -116,6 +121,7 @@ gulp.task('info-script-dist', gulp.series('info-js-concat' , function () {
         .pipe(buffer())
         .pipe(sourcemaps.init())
         .pipe(uglify())
+        //.pipe(gzip())
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('./dist/js'))
         .pipe(livereload());
@@ -125,6 +131,7 @@ gulp.task('info-script-dist', gulp.series('info-js-concat' , function () {
     gulp.src('css/*.css')
     .pipe(sourcemaps.init())
     .pipe(minify())
+    //.pipe(gzip())
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('dist/css/'));
     done();

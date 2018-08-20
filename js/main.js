@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
  * Fetch all neighborhoods and set their HTML.
  */
 const fetchNeighborhoods = () => {
-  DBHelper.fetchNeighborhoods((error, neighborhoods) => {
+  MainDBHelper.fetchNeighborhoods((error, neighborhoods) => {
     if (error) { // Got an error
       console.error(error);
     } else {
@@ -45,7 +45,7 @@ const fillNeighborhoodsHTML = (neighborhoods = self.neighborhoods) => {
  * Fetch all cuisines and set their HTML.
  */
 const fetchCuisines = () => {
-  DBHelper.fetchCuisines((error, cuisines) => {
+  MainDBHelper.fetchCuisines((error, cuisines) => {
     if (error) { // Got an error!
       console.error(error);
     } else {
@@ -112,7 +112,7 @@ self.updateRestaurants = () => {
   const cuisine = cSelect[cIndex].value;
   const neighborhood = nSelect[nIndex].value;
 
-  DBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
+  MainDBHelper.fetchRestaurantByCuisineAndNeighborhood(cuisine, neighborhood, (error, restaurants) => {
     if (error) { // Got an error!
       console.error(error);
     } else {
@@ -159,7 +159,7 @@ const createRestaurantHTML = (restaurant) => {
 
   const source1 = document.createElement('source');
   source1.media = "(max-width: 350px)";
-  source1.srcset = DBHelper.imageUrlForRestaurant(restaurant , 'sm');
+  source1.srcset = MainDBHelper.imageUrlForRestaurant(restaurant , 'sm');
   picture.append(source1);
 
   const image = document.createElement('img');
@@ -177,7 +177,7 @@ const createRestaurantHTML = (restaurant) => {
     loadImage(image);
   }
   const loadImage = image => {
-    image.src = DBHelper.imageUrlForRestaurant(restaurant , 'md');
+    image.src = MainDBHelper.imageUrlForRestaurant(restaurant , 'md');
 
   }
   function onChange (changes , observer) {
@@ -196,7 +196,7 @@ const createRestaurantHTML = (restaurant) => {
 
   favorite.onclick = function() {
     const isFavNow = !restaurant.is_favorite;
-    DBHelper.updateFavoriteStatus(restaurant.id, isFavNow);
+    MainDBHelper.updateFavoriteStatus(restaurant.id, isFavNow);
     restaurant.is_favorite = !restaurant.is_favorite;
     setFavElementClass(favorite , restaurant.is_favorite);
   };
@@ -220,7 +220,7 @@ const createRestaurantHTML = (restaurant) => {
   more.innerHTML = 'View Details';    
   more.setAttribute("role", "button");  
   more.setAttribute("aria-label", "More Information About"+restaurant.name);
-  more.href = DBHelper.urlForRestaurant(restaurant);
+  more.href = MainDBHelper.urlForRestaurant(restaurant);
   li.append(more)
   li.setAttribute("role" , "article");
   return li
@@ -252,7 +252,7 @@ const setFavElementClass = (elem , fav) => {
 const addMarkersToMap = (restaurants = self.restaurants) => {
   restaurants.forEach(restaurant => {
     // Add marker to the map
-    const marker = DBHelper.mapMarkerForRestaurant(restaurant, self.map);
+    const marker = MainDBHelper.mapMarkerForRestaurant(restaurant, self.map);
     google.maps.event.addListener(marker, 'click', () => {
       window.location.href = marker.url
     });

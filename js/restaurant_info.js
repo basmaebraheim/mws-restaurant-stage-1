@@ -28,7 +28,7 @@ window.initMap = () => {
         scrollwheel: false
       });
       fillBreadcrumb();
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
+      RestaurantDBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
   });
 }
@@ -46,7 +46,7 @@ const fetchRestaurantFromURL = (callback) => {
     const error = 'No restaurant id in URL'
     callback(error, null);
   } else {
-    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+    RestaurantDBHelper.fetchRestaurantById(id, (error, restaurant) => {
       console.log(restaurant);
       self.restaurant = restaurant;
       if (!restaurant) {
@@ -71,8 +71,8 @@ const fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img';
-  image.alt= "an image of "+ DBHelper.nameForRestaurant(restaurant) + " restaurant in " + restaurant.neighborhood;
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.alt= "an image of "+ RestaurantDBHelper.nameForRestaurant(restaurant) + " restaurant in " + restaurant.neighborhood;
+  image.src = RestaurantDBHelper.imageUrlForRestaurant(restaurant);
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
@@ -112,7 +112,7 @@ const fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hour
  * Create all reviews HTML and add them to the webpage.
  */
 const fillReviewsHTML = (id) => {
-  DBHelper.fetchRestaurantReviews(id)
+  RestaurantDBHelper.fetchRestaurantReviews(id)
       .then(rev => {
         const reviews = rev;
         const container = document.getElementById('reviews-container');
@@ -143,6 +143,15 @@ const createReviewHTML = (review) => {
   li.role="tree-item";
   const reviewHead = document.createElement('div');
   li.appendChild(reviewHead);
+
+  if (!navigator.onLine) {
+    const connection_status = document.createElement('p');
+    connection_status.classList.add('offline_label');
+    connection_status.innerHTML = "Offline";
+    li.classList.add("reviews_offline");
+    li.appendChild(connection_status);
+
+  }
 
   const name = document.createElement('h3');
   name.innerHTML = review.name;
@@ -301,54 +310,11 @@ const addReview = () => {
     comments: comments,
     createdAt : new Date()
   };
-  DBHelper.addReview(newReview);
-  addReviewHtml(newReview);
-  document.getElementById("review-form").reset();
-
-}
-
-/**
- * add new review to UI
- */
-const addReviewHtml = (review) => {
+  RestaurantDBHelper.addReview(newReview);
   const ul = document.getElementById('reviews-list');
-  const li = document.createElement('li');  
-  li.role="tree-item";
-  const reviewHead = document.createElement('div');
-  li.appendChild(reviewHead);
 
-  if (!navigator.onLine) {
-    const connection_status = document.createElement('p');
-    connection_status.classList.add('offline_label');
-    connection_status.innerHTML = "Offline";
-    li.classList.add("reviews_offline");
-    li.appendChild(connection_status);
+  ul.appendChild(createReviewHTML(newReview));
 
-  }
-  const name = document.createElement('h3');
-  name.innerHTML = review.name;
-  name.className = 'name';
-  name.setAttribute("tabindex","0");  
-  reviewHead.appendChild(name);
-
-  const date = document.createElement('p');
-  date.innerHTML = review.date;
-  date.className = 'date';
-  date.setAttribute("tabindex","0");
-  reviewHead.appendChild(date);
-  
-  const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
-  rating.className = 'rating';
-  rating.setAttribute("tabindex","0");
-  li.appendChild(rating);
-  
-  const comments = document.createElement('p');
-  comments.innerHTML = review.comments;
-  li.appendChild(comments);
-  comments.setAttribute("tabindex","0");
-  li.setAttribute("role","article");
-  
-  ul.appendChild(li);
+  document.getElementById("review-form").reset();
 
 }

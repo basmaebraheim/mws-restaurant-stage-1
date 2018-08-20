@@ -435,7 +435,6 @@ const createRestaurantHTML = (restaurant) => {
 
   const favorite = document.createElement('button');
   favorite.innerHTML = '❤';
-  favorite.classList.add = 'fav-btn';
 
   favorite.onclick = function() {
     const isFavNow = !restaurant.is_favorite;
@@ -475,16 +474,14 @@ const createRestaurantHTML = (restaurant) => {
 const setFavElementClass = (elem , fav) => {
   if (!fav) {
     elem.classList.remove('favorite');
-
-    elem.classList.add ='not-favorite';
-
+    elem.classList.add('not-favorite');
     elem.setAttribute('aria-label' , 'mark as favorite');
 
 
   }else {
 
     elem.classList.remove('not-favorite');
-    elem.classList.add = 'favorite';
+    elem.classList.add('favorite');
     elem.setAttribute('aria-label' , 'remove from favorites');
   }
 

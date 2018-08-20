@@ -193,6 +193,7 @@ class RestaurantDBHelper {
       RestaurantDBHelper.sendDataWhenOnline(offline_obj);
       return;
     }
+    console.log("send review");
     let reviewSend = {
       "name": newReview.name,
       "rating": parseInt(newReview.rating),
@@ -217,6 +218,7 @@ class RestaurantDBHelper {
     
   }
   static sendDataWhenOnline(offline_obj) {
+    console.log("cached review");
     localStorage.setItem('data', JSON.stringify(offline_obj.data));
     window.addEventListener('online', (event) => {
       let data = JSON.parse(localStorage.getItem('data'));
@@ -284,7 +286,6 @@ const fetchRestaurantFromURL = (callback) => {
     callback(error, null);
   } else {
     RestaurantDBHelper.fetchRestaurantById(id, (error, restaurant) => {
-      console.log(restaurant);
       self.restaurant = restaurant;
       if (!restaurant) {
         //console.log(error);
@@ -382,9 +383,10 @@ const createReviewHTML = (review) => {
   li.appendChild(reviewHead);
 
   if (!navigator.onLine) {
+    console.log("add offline review");
     const connection_status = document.createElement('p');
     connection_status.classList.add('offline_label');
-    connection_status.innerHTML = "Offline";
+    connection_status.innerHTML = "This review will be submitted when get online.";
     li.classList.add("reviews_offline");
     li.appendChild(connection_status);
 

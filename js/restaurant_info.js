@@ -47,7 +47,6 @@ const fetchRestaurantFromURL = (callback) => {
     callback(error, null);
   } else {
     RestaurantDBHelper.fetchRestaurantById(id, (error, restaurant) => {
-      console.log(restaurant);
       self.restaurant = restaurant;
       if (!restaurant) {
         //console.log(error);
@@ -145,9 +144,10 @@ const createReviewHTML = (review) => {
   li.appendChild(reviewHead);
 
   if (!navigator.onLine) {
+    console.log("add offline review");
     const connection_status = document.createElement('p');
     connection_status.classList.add('offline_label');
-    connection_status.innerHTML = "Offline";
+    connection_status.innerHTML = "This review will be submitted when get online.";
     li.classList.add("reviews_offline");
     li.appendChild(connection_status);
 

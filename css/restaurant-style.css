@@ -196,6 +196,13 @@ nav a strong:focus {
     border-top: 1px solid #fff;
     width: 100%;
   }
+  .offline_label
+  {
+    background-color: #ff5b00;
+    color: #fff;
+    padding: 8px;
+    border-radius: 9px;
+  }
   #map-container {
     order: 1;
   }

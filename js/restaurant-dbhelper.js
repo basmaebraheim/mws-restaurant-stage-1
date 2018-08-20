@@ -193,6 +193,7 @@ class RestaurantDBHelper {
       RestaurantDBHelper.sendDataWhenOnline(offline_obj);
       return;
     }
+    console.log("send review");
     let reviewSend = {
       "name": newReview.name,
       "rating": parseInt(newReview.rating),
@@ -217,6 +218,7 @@ class RestaurantDBHelper {
     
   }
   static sendDataWhenOnline(offline_obj) {
+    console.log("cached review");
     localStorage.setItem('data', JSON.stringify(offline_obj.data));
     window.addEventListener('online', (event) => {
       let data = JSON.parse(localStorage.getItem('data'));
